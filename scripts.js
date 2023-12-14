@@ -2,7 +2,7 @@ const userName = "Albers-" + Math.floor(Math.random() * 100000)
 const password = "x";
 document.querySelector('#user-name').innerHTML = userName;
 
-const socket = io.connect('https://192.168.1.184:8181/', {
+const socket = io.connect('https://192.168.1.155:8181/', {
     auth: {
         userName, password
     }
@@ -152,3 +152,5 @@ const addNewIceCandidate = iceCandidate => {
 
 
 document.querySelector('#call').addEventListener('click', call)
+
+

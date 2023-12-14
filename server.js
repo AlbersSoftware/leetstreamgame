@@ -52,6 +52,11 @@ io.on('connection', (socket) => {
         socket.emit('availableOffers', offers);
     }
 
+   
+
+
+    // new offers
+
     socket.on('newOffer', newOffer => {
         offers.push({
             offererUserName: userName,

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Embedding an online compiler into a website</title>
+</head>
+
+<body>
+    <div>
+        <select id="language-selector">
+            <option value="none" selected>None</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+        </select>
+    </div>
+
+    <!-- The JDoodle editors -->
+    <!-- java div -->
+    <div id="java-editor" data-pym-src="https://www.jdoodle.com/plugin/v0/2990afd56825178e009e303aa2527d70/79381deb555af18cfbd2e02f88ee3b52" style="display: none;">
+    </div>
+    <!-- c++ div -->
+    <div id="cpp-editor" data-pym-src="https://www.jdoodle.com/embed/v0/2IhG?stdin=1&arg=0" style="display: none;">
+    </div>
+
+    <!-- This script tag contains the JavaScript code in the written URL -->
+    <script src="https://www.jdoodle.com/assets/jdoodle-pym.min.js" type="text/javascript">
+    </script>
+
+    <!-- Include socket.io script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+
+    <!-- This script tag contains the JavaScript code for real-time code synchronization -->
+    <script src="realtime-sync.js" type="text/javascript"></script>
+
+    <script>
+       
+
+        // Listen for changes in the code editor and send updates to the server
+        const languageSelector = document.getElementById('language-selector');
+        languageSelector.addEventListener('change', (event) => {
+            const selectedLanguage = event.target.value;
+
+            // Get the selected editor element
+            const selectedEditor = document.getElementById(selectedLanguage + '-editor');
+
+            // Hide all editor divs
+            document.getElementById('java-editor').style.display = 'none';
+            document.getElementById('cpp-editor').style.display = 'none';
+
+            // Show the selected editor div if the selected language is not 'none'
+            if (selectedLanguage !== 'none') {
+                selectedEditor.style.display = 'block';
+
+                // Ensure that you select the correct iframe based on the language selection
+                const iframe = selectedEditor.querySelector('iframe');
+
+                // Ensure that you select the correct text input area within the iframe
+                const codeTextarea = iframe.contentDocument.querySelector('.ace_text-input'); // Update the selector
+
+                // Listen for text updates from the server
+                socket.on('textUpdate', (text) => {
+                    // Update the code editor with the received text
+                    codeTextarea.value = text; // Use .value instead of .textContent
+                });
+
+                // Listen for changes in the code editor and send updates to the server
+                codeTextarea.addEventListener('input', (event) => {
+                    const updatedText = event.target.value;
+                    socket.emit('textUpdate', updatedText);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+

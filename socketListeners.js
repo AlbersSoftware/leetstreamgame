@@ -27,7 +27,7 @@ socket.on('receivedIceCandidateFromServer', iceCandidate => {
 function createOfferEls(offers) {
     // Get the answer button container
     const answerEl = document.querySelector('#answer');
-
+    
     // Check if there are existing buttons, and clear them if new offers are generated
     if (answerEl.children.length > 0) {
         answerEl.innerHTML = '';
@@ -43,5 +43,9 @@ function createOfferEls(offers) {
         
     });
 }
+
+
+
+
 
 
